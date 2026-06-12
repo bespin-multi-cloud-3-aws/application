@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: config-server
-        image: tfcoreacr01.azurecr.io/petclinic-ecr:config-server
+        image: tfcoreacr01.azurecr.io/petclinic-acr:config-server
         ports:
         - containerPort: 8888
         env:
@@ -92,7 +92,7 @@ spec:
           done
       containers:
       - name: discovery-server
-        image: tfcoreacr009.azurecr.io/petclinic-ecr:discovery-server
+        image: tfcoreacr01.azurecr.io/petclinic-acr:discovery-server
         ports:
         - containerPort: 8761
         env:
@@ -164,7 +164,7 @@ spec:
           done
       containers:
       - name: customers-service
-        image: tfcoreacr009.azurecr.io/petclinic-ecr:customers-service
+        image: tfcoreacr01.azurecr.io/petclinic-acr:customers-service
         ports:
         - containerPort: 8081
         env:
@@ -238,7 +238,7 @@ spec:
 #           done
 #       containers:
 #       - name: vets-service
-#         image: tfcoreacr009.azurecr.io/petclinic-ecr:vets-service
+#         image: tfcoreacr01.azurecr.io/petclinic-acr:vets-service
 #         ports:
 #         - containerPort: 8083
 #         env:
@@ -309,7 +309,7 @@ spec:
 #           done
 #       containers:
 #       - name: visits-service
-#         image: tfcoreacr009.azurecr.io/petclinic-ecr:visits-service
+#         image: tfcoreacr01.azurecr.io/petclinic-acr:visits-service
 #         ports:
 #         - containerPort: 8082
 #         env:
@@ -380,7 +380,7 @@ spec:
           done
       containers:
       - name: api-gateway
-        image: tfcoreacr009.azurecr.io/petclinic-ecr:api-gateway
+        image: tfcoreacr01.azurecr.io/petclinic-acr:api-gateway
         ports:
         - containerPort: 8080
         env:
@@ -447,7 +447,7 @@ spec:
           done
       containers:
       - name: admin-server
-        image: tfcoreacr009.azurecr.io/petclinic-ecr:admin-server
+        image: tfcoreacr01.azurecr.io/petclinic-acr:admin-server
         ports:
         - containerPort: 9090
         env:
@@ -513,7 +513,7 @@ spec:
           done
       containers:
       - name: genai-service
-        image: tfcoreacr009.azurecr.io/petclinic-ecr:genai-service
+        image: tfcoreacr01.azurecr.io/petclinic-acr:genai-service
         ports:
         - containerPort: 8084
         env:
