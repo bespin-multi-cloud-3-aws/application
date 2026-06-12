@@ -18,14 +18,14 @@ spec:
     spec:
       containers:
       - name: config-server
-        image: tfcoreacr009.azurecr.io/petclinic-ecr:config-server
+        image: tfcoreacr01.azurecr.io/petclinic-ecr:config-server
         ports:
         - containerPort: 8888
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "docker"
         - name: SPRING_CLOUD_CONFIG_SERVER_GIT_URI
-          value: "https://github.com/jeongbeen1-svg/spring-petclinic-microservices-config"
+          value: "https://github.com/bespin-multi-cloud-3-aws/spring-petclinic-microservices-config"
         - name: SPRING_CLOUD_CONFIG_SERVER_GIT_CLONE_ON_START
           value: "true"
         - name: SPRING_CLOUD_CONFIG_SERVER_GIT_DEFAULT_LABEL
