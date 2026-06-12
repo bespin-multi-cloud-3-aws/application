@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: whatap-agent
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/bespin-multi-cloud-3-aws/petclinic.git'
+    path: / # 에이전트 YAML이 있는 폴더
+    targetRevision: HEAD
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: whatap-monitoring
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
