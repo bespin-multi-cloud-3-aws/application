@@ -161,7 +161,7 @@ spec:
         - containerPort: 8081
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: "docker,mysql"
+          value: "docker"
         - name: SERVER_PORT
           value: "8081"
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
@@ -233,7 +233,7 @@ spec:
         - containerPort: 8083
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: "docker,mysql"
+          value: "docker"
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
           value: "http://discovery-server:8761/eureka/"
         envFrom:
@@ -302,7 +302,7 @@ spec:
         - containerPort: 8082
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: "docker,mysql"
+          value: "docker"
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
           value: "http://discovery-server:8761/eureka/"
         envFrom:
