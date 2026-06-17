@@ -1,0 +1,42 @@
+name: YAML Lint & Validate CI
+
+# 워크플로우가 실행될 조건 설정
+on:
+  push:
+    branches: [ "main", "develop" ]
+    paths:
+      - '**/*.yaml'
+      - '**/*.yml'
+  pull_request:
+    branches: [ "main", "develop" ]
+    paths:
+      - '**/*.yaml'
+      - '**/*.yml'
+
+jobs:
+  yaml-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. 레포지토리 코드 체크아웃
+    - name: Checkout source code
+      uses: actions/checkout@v4
+
+    # 2. yamllint를 활용한 문법 및 스타일 검사
+    - name: Run yamllint
+      uses: ibiqlik/action-yamllint@v3
+      with:
+        file_or_dir: '.'
+        # 검사에서 제외할 디렉토리가 있다면 설정 (예: 외부 라이브러리 등)
+        # config: |
+        #   extends: default
+        #   ignore: |
+        #     node_modules/
+        
+    # 3. (선택 사항) 쿠버네티스 YAML을 사용하는 경우 유효성 검증 (kubeconform)
+    # 만약 K8s 관련 YAML이 없다면 이 Step은 삭제하셔도 됩니다.
+    - name: Validate Kubernetes YAMLs (Optional)
+      uses: yannh/kubeconform-action@v0.1.3
+      with:
+        validateStateless: true
+        directory: '.'
