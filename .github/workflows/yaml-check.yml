@@ -20,11 +20,9 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      # 개별 스타일 검사(yamllint)는 완전히 빼버리고, 
-      # 실제 배포 가능한 파일인지 쿠버네티스 스키마만 검사합니다.
       - name: Install and Run Kubeconform
         run: |
           curl -L -o kubeconform.tar.gz https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz
           tar -xzf kubeconform.tar.gz
           sudo mv kubeconform /usr/local/bin/
-          kubeconform -summary -ignore-missing-schemas .
+          kubeconform -summary -ignore-missing-schemas -skip .github .
