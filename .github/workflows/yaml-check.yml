@@ -3,14 +3,8 @@ name: YAML Validate CI
 on:
   push:
     branches: ["main", "develop"]
-    paths:
-      - '**/*.yaml'
-      - '**/*.yml'
   pull_request:
     branches: ["main", "develop"]
-    paths:
-      - '**/*.yaml'
-      - '**/*.yml'
 
 jobs:
   yaml-validate:
@@ -26,5 +20,8 @@ jobs:
           tar -xzf kubeconform.tar.gz
           sudo mv kubeconform /usr/local/bin/
           
-          # -reject 옵션에 정규식을 사용하여 .github 파일이 들어오면 무조건 거부(Reject)합니다.
-          kubeconform -summary -ignore-missing-schemas -reject '.*\.github.*' .
+          echo "=== .github 폴더를 제외한 순수 YAML 파일만 골라서 검사 시작 ==="
+          
+          # 1. find 명령어로 .github 폴더는 완전히 배제(-prune)하고, 확장자가 yaml/yml인 파일만 찾습니다.
+          # 2. 찾은 파일 목록을 kubeconform에 한 번에 넘겨서 검사합니다.
+          find . -path "./.github" -prune -o -name "*.yaml" -o -name "*.yml" -print0 | xargs -0 kubeconform -summary -ignore-missing-schemas
