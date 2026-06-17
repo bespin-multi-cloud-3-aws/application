@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-application
+  namespace: argocd
+spec:
+  project: default
+  source:
+    # 관리할 다른 앱들의 YAML 파일이 저장되어 있는 Git 레포지토리 주소
+    repoURL: 'https://github.com/bespin-multi-cloud-3-aws/application.git'
+    # 동기화할 브랜치나 태그 (기본값: HEAD 또는 main)
+    targetRevision: HEAD
+    # Git 레포지토리 내에서 YAML 파일들이 위치한 디렉토리 경로
+    path: awsyaml
+  destination:
+    # ArgoCD가 배포될 대상 쿠버네티스 클러스터 주소 (내부 클러스터 의미)
+    server: 'https://kubernetes.default.svc'
+    # 앱이 배포될 네임스페이스
+    namespace: argocd
+  syncPolicy:
+    automated:
+      # Git에서 파일이 삭제되면 쿠버네티스 클러스터에서도 자동으로 삭제
+      prune: true
+      # 클러스터 리소스를 누군가 수동으로 수정하면 Git 상태로 강제 원복
+      selfHeal: true
