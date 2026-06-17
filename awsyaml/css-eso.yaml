@@ -46,11 +46,11 @@ spec:
         property: host
     - secretKey: DB_USER
       remoteRef:
-        key: rds!db-c1186c24-a3f0-4309-82a2-18f1a3623a82
+        key: petclinic/db-connection-info
         property: username
     - secretKey: DB_PASS
       remoteRef:
-        key: rds!db-c1186c24-a3f0-4309-82a2-18f1a3623a82
+        key: petclinic/db-connection-info
         property: password
 ---
 apiVersion: external-secrets.io/v1
