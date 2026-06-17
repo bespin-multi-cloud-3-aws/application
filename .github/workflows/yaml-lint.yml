@@ -1,6 +1,5 @@
 name: YAML Lint & Validate CI
 
-# 워크플로우가 실행될 조건 설정
 on:
   push:
     branches: [ "main", "develop" ]
@@ -27,16 +26,16 @@ jobs:
       uses: ibiqlik/action-yamllint@v3
       with:
         file_or_dir: '.'
-        # 검사에서 제외할 디렉토리가 있다면 설정 (예: 외부 라이브러리 등)
-        # config: |
-        #   extends: default
-        #   ignore: |
-        #     node_modules/
         
-    # 3. (선택 사항) 쿠버네티스 YAML을 사용하는 경우 유효성 검증 (kubeconform)
-    # 만약 K8s 관련 YAML이 없다면 이 Step은 삭제하셔도 됩니다.
-    - name: Validate Kubernetes YAMLs
-      uses: actions-hub/kubeconform@v1.0.0
-      with:
-        # 검사할 디렉토리 경로 설정
-        argv: .
+    # 3. Kubeconform 직접 설치 및 실행 (에러 해결 핵심 스텝)
+    - name: Install and Run Kubeconform
+      run: |
+        echo "=== Kubeconform 다운로드 및 설치 ==="
+        curl -L -o kubeconform.tar.gz https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz
+        tar -xzf kubeconform.tar.gz
+        sudo mv kubeconform /usr/local/bin/
+        
+        echo "=== 쿠버네티스 YAML 문법 및 스키마 검증 시작 ==="
+        # -summary: 검사 결과 요약 출력
+        # -ignore-missing-schemas: ArgoCD Application이나 ESO ExternalSecret 같은 커스텀 리소스(CRD) 에러 방지
+        kubeconform -summary -ignore-missing-schemas .
