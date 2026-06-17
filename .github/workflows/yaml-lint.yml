@@ -2,12 +2,12 @@ name: YAML Lint & Validate CI
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: ["main", "develop"]
     paths:
       - '**/*.yaml'
       - '**/*.yml'
   pull_request:
-    branches: [ "main", "develop" ]
+    branches: ["main", "develop"]
     paths:
       - '**/*.yaml'
       - '**/*.yml'
@@ -17,25 +17,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. 레포지토리 코드 체크아웃
-    - name: Checkout source code
-      uses: actions/checkout@v4
+      - name: Checkout source code
+        uses: actions/checkout@v4
 
-    # 2. yamllint를 활용한 문법 및 스타일 검사
-    - name: Run yamllint
-      uses: ibiqlik/action-yamllint@v3
-      with:
-        file_or_dir: '.'
-        
-    # 3. Kubeconform 직접 설치 및 실행 (에러 해결 핵심 스텝)
-    - name: Install and Run Kubeconform
-      run: |
-        echo "=== Kubeconform 다운로드 및 설치 ==="
-        curl -L -o kubeconform.tar.gz https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz
-        tar -xzf kubeconform.tar.gz
-        sudo mv kubeconform /usr/local/bin/
-        
-        echo "=== 쿠버네티스 YAML 문법 및 스키마 검증 시작 ==="
-        # -summary: 검사 결과 요약 출력
-        # -ignore-missing-schemas: ArgoCD Application이나 ESO ExternalSecret 같은 커스텀 리소스(CRD) 에러 방지
-        kubeconform -summary -ignore-missing-schemas .
+      - name: Run yamllint
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: '.'
+
+      - name: Install and Run Kubeconform
+        run: |
+          curl -L -o kubeconform.tar.gz https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz
+          tar -xzf kubeconform.tar.gz
+          sudo mv kubeconform /usr/local/bin/
+          kubeconform -summary -ignore-missing-schemas .
