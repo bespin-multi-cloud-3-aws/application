@@ -25,4 +25,6 @@ jobs:
           curl -L -o kubeconform.tar.gz https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz
           tar -xzf kubeconform.tar.gz
           sudo mv kubeconform /usr/local/bin/
-          kubeconform -summary -ignore-missing-schemas -skip .github .
+          
+          # -reject 옵션에 정규식을 사용하여 .github 파일이 들어오면 무조건 거부(Reject)합니다.
+          kubeconform -summary -ignore-missing-schemas -reject '.*\.github.*' .
