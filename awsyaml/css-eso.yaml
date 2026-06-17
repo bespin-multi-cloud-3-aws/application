@@ -1,3 +1,26 @@
+# ============================================================
+# 1. Namespace
+# ============================================================
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: petclinic
+---
+apiVersion: external-secrets.io/v1
+kind: ClusterSecretStore
+metadata:
+  name: aws-secret-store
+spec:
+  provider:
+    aws:
+      service: SecretsManager
+      region: ap-northeast-2
+      auth:
+        jwt:
+          serviceAccountRef:
+            name: external-secrets-sa
+            namespace: kube-system
+---
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
