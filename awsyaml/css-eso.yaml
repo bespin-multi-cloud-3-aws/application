@@ -52,3 +52,22 @@ spec:
       remoteRef:
         key: rds!db-c1186c24-a3f0-4309-82a2-18f1a3623a82
         property: password
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: ai-secret-eso
+  namespace: petclinic
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: aws-secret-store
+    kind: ClusterSecretStore
+  target:
+    name: ai-secret
+    creationPolicy: Owner
+  data:
+    - secretKey: API_KEY
+      remoteRef:
+        key: ai-secret
+        property: API_KEY
