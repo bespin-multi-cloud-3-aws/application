@@ -1,4 +1,3 @@
-
 # ============================================================
 # 2. config-server (포트 8888)
 # ============================================================
@@ -19,27 +18,35 @@ spec:
     spec:
       containers:
       - name: config-server
-        image: 906336681755.dkr.ecr.ap-northeast-2.amazonaws.com/petclinic_msa_1:config-server
+        image: tfcoreacr01.azurecr.io/petclinic-acr:config-server
         ports:
         - containerPort: 8888
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "docker"
+        - name: SPRING_CLOUD_CONFIG_SERVER_GIT_URI
+          value: "https://github.com/bespin-multi-cloud-3-aws/spring-petclinic-microservices-config"
+        - name: SPRING_CLOUD_CONFIG_SERVER_GIT_CLONE_ON_START
+          value: "true"
+        - name: SPRING_CLOUD_CONFIG_SERVER_GIT_DEFAULT_LABEL
+          value: "azure"
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
           value: "http://discovery-server:8761/eureka/"
         readinessProbe:
           httpGet:
             path: /actuator/health
             port: 8888
-          initialDelaySeconds: 30
+          initialDelaySeconds: 35
           periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 5
         resources:
           requests:
             memory: "512Mi"
-            cpu: "50m"
+            cpu: "250m"
           limits:
             memory: "1Gi"
-            cpu: "200m"
+            cpu: "500m"
 
 ---
 apiVersion: v1
@@ -85,7 +92,7 @@ spec:
           done
       containers:
       - name: discovery-server
-        image: 906336681755.dkr.ecr.ap-northeast-2.amazonaws.com/petclinic_msa_1:discovery-server
+        image: tfcoreacr01.azurecr.io/petclinic-acr:discovery-server
         ports:
         - containerPort: 8761
         env:
@@ -108,10 +115,10 @@ spec:
         resources:
           requests:
             memory: "512Mi"
-            cpu: "50m"
+            cpu: "250m"
           limits:
             memory: "1Gi"
-            cpu: "200m"
+            cpu: "500m"
 
 ---
 apiVersion: v1
@@ -157,21 +164,21 @@ spec:
           done
       containers:
       - name: customers-service
-        image: 906336681755.dkr.ecr.ap-northeast-2.amazonaws.com/petclinic_msa_1:customers-service
+        image: tfcoreacr01.azurecr.io/petclinic-acr:customers-service
         ports:
         - containerPort: 8081
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: "docker"
+          value: "docker,mysql"
+        - name: SPRING_CLOUD_CONFIG_SERVER_GIT_DEFAULT_LABEL
+          value: "azure"
         - name: SERVER_PORT
           value: "8081"
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
           value: "http://discovery-server:8761/eureka/"
-        - name: SPRING_JPA_HIBERNATE_DDL_AUTO
-          value: "update"
         envFrom:
-        - secretRef:
-            name: petclinic-db-eso
+        - configMapRef:
+            name: db-config
         readinessProbe:
           httpGet:
             path: /actuator/health
@@ -182,10 +189,10 @@ spec:
         resources:
           requests:
             memory: "512Mi"
-            cpu: "100m"
+            cpu: "250m"
           limits:
             memory: "1Gi"
-            cpu: "300m"
+            cpu: "500m"
 
 ---
 apiVersion: v1
@@ -204,143 +211,143 @@ spec:
 # ============================================================
 # 5. vets-service (포트 8083)
 # ============================================================
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: vets-service
-  namespace: petclinic
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: vets-service
-  template:
-    metadata:
-      labels:
-        app: vets-service
-    spec:
-      initContainers:
-      - name: wait-for-discovery
-        image: curlimages/curl:latest
-        command:
-        - sh
-        - -c
-        - |
-          until curl -sf http://discovery-server:8761/actuator/health; do
-            echo "Waiting for discovery-server..."; sleep 5;
-          done
-      containers:
-      - name: vets-service
-        image: 906336681755.dkr.ecr.ap-northeast-2.amazonaws.com/petclinic_msa_1:vets-service
-        ports:
-        - containerPort: 8083
-        env:
-        - name: SPRING_PROFILES_ACTIVE
-          value: "docker"
-        - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-          value: "http://discovery-server:8761/eureka/"
-        - name: SPRING_JPA_HIBERNATE_DDL_AUTO
-          value: "update"
-        envFrom:
-        - secretRef:
-            name: petclinic-db-eso
-        readinessProbe:
-          httpGet:
-            path: /actuator/health
-            port: 8083
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "100m"
-          limits:
-            memory: "1Gi"
-            cpu: "300m"
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: vets-service
+#   namespace: petclinic
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: vets-service
+#   template:
+#     metadata:
+#       labels:
+#         app: vets-service
+#     spec:
+#       initContainers:
+#       - name: wait-for-discovery
+#         image: curlimages/curl:latest
+#         command:
+#         - sh
+#         - -c
+#         - |
+#           until curl -sf http://discovery-server:8761/actuator/health; do
+#             echo "Waiting for discovery-server..."; sleep 5;
+#           done
+#       containers:
+#       - name: vets-service
+#         image: tfcoreacr01.azurecr.io/petclinic-acr:vets-service
+#         ports:
+#         - containerPort: 8083
+#         env:
+#         - name: SPRING_PROFILES_ACTIVE
+#           value: "docker,mysql"
+#         - name: SPRING_CLOUD_CONFIG_SERVER_GIT_DEFAULT_LABEL
+#           value: "azure"
+#         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+#           value: "http://discovery-server:8761/eureka/"
+#         envFrom:
+#         - configMapRef:
+#             name: db-config
+#         readinessProbe:
+#           httpGet:
+#             path: /actuator/health
+#             port: 8083
+#           initialDelaySeconds: 30
+#           periodSeconds: 10
+#         resources:
+#           requests:
+#             memory: "512Mi"
+#             cpu: "250m"
+#           limits:
+#             memory: "1Gi"
+#             cpu: "500m"
 
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: vets-service
-  namespace: petclinic
-spec:
-  selector:
-    app: vets-service
-  ports:
-  - port: 8083
-    targetPort: 8083
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: vets-service
+#   namespace: petclinic
+# spec:
+#   selector:
+#     app: vets-service
+#   ports:
+#   - port: 8083
+#     targetPort: 8083
 
 ---
 # ============================================================
 # 6. visits-service (포트 8082)
 # ============================================================
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: visits-service
-  namespace: petclinic
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: visits-service
-  template:
-    metadata:
-      labels:
-        app: visits-service
-    spec:
-      initContainers:
-      - name: wait-for-discovery
-        image: curlimages/curl:latest
-        command:
-        - sh
-        - -c
-        - |
-          until curl -sf http://discovery-server:8761/actuator/health; do
-            echo "Waiting for discovery-server..."; sleep 5;
-          done
-      containers:
-      - name: visits-service
-        image: 906336681755.dkr.ecr.ap-northeast-2.amazonaws.com/petclinic_msa_1:visits-service
-        ports:
-        - containerPort: 8082
-        env:
-        - name: SPRING_PROFILES_ACTIVE
-          value: "docker"
-        - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-          value: "http://discovery-server:8761/eureka/"
-        - name: SPRING_JPA_HIBERNATE_DDL_AUTO
-          value: "update"
-        envFrom:
-        - secretRef:
-            name: petclinic-db-eso
-        readinessProbe:
-          httpGet:
-            path: /actuator/health
-            port: 8082
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "100m"
-          limits:
-            memory: "1Gi"
-            cpu: "300m"
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: visits-service
+#   namespace: petclinic
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: visits-service
+#   template:
+#     metadata:
+#       labels:
+#         app: visits-service
+#     spec:
+#       initContainers:
+#       - name: wait-for-discovery
+#         image: curlimages/curl:latest
+#         command:
+#         - sh
+#         - -c
+#         - |
+#           until curl -sf http://discovery-server:8761/actuator/health; do
+#             echo "Waiting for discovery-server..."; sleep 5;
+#           done
+#       containers:
+#       - name: visits-service
+#         image: tfcoreacr01.azurecr.io/petclinic-acr:visits-service
+#         ports:
+#         - containerPort: 8082
+#         env:
+#         - name: SPRING_PROFILES_ACTIVE
+#           value: "docker,mysql"
+#         - name: SPRING_CLOUD_CONFIG_SERVER_GIT_DEFAULT_LABEL
+#           value: "azure"
+#         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+#           value: "http://discovery-server:8761/eureka/"
+#         envFrom:
+#         - configMapRef:
+#             name: db-config
+#         readinessProbe:
+#           httpGet:
+#             path: /actuator/health
+#             port: 8082
+#           initialDelaySeconds: 30
+#           periodSeconds: 10
+#         resources:
+#           requests:
+#             memory: "512Mi"
+#             cpu: "250m"
+#           limits:
+#             memory: "1Gi"
+#             cpu: "500m"
 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: visits-service
-  namespace: petclinic
-spec:
-  selector:
-    app: visits-service
-  ports:
-  - port: 8082
-    targetPort: 8082
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: visits-service
+#   namespace: petclinic
+# spec:
+#   selector:
+#     app: visits-service
+#   ports:
+#   - port: 8082
+#     targetPort: 8082
 
 ---
 # ============================================================
@@ -373,7 +380,7 @@ spec:
           done
       containers:
       - name: api-gateway
-        image: 906336681755.dkr.ecr.ap-northeast-2.amazonaws.com/petclinic_msa_1:api-gateway
+        image: tfcoreacr01.azurecr.io/petclinic-acr:api-gateway
         ports:
         - containerPort: 8080
         env:
@@ -390,10 +397,10 @@ spec:
         resources:
           requests:
             memory: "512Mi"
-            cpu: "100m"
+            cpu: "250m"
           limits:
             memory: "1Gi"
-            cpu: "300m"
+            cpu: "500m"
 
 ---
 apiVersion: v1
@@ -406,7 +413,7 @@ spec:
   selector:
     app: api-gateway
   ports:
-  - port: 8080
+  - port: 80
     targetPort: 8080
 
 ---
@@ -440,7 +447,7 @@ spec:
           done
       containers:
       - name: admin-server
-        image: 906336681755.dkr.ecr.ap-northeast-2.amazonaws.com/petclinic_msa_1:admin-server
+        image: tfcoreacr01.azurecr.io/petclinic-acr:admin-server
         ports:
         - containerPort: 9090
         env:
@@ -457,10 +464,10 @@ spec:
         resources:
           requests:
             memory: "512Mi"
-            cpu: "50m"
+            cpu: "250m"
           limits:
             memory: "1Gi"
-            cpu: "200m"
+            cpu: "500m"
 
 ---
 apiVersion: v1
@@ -506,7 +513,7 @@ spec:
           done
       containers:
       - name: genai-service
-        image: 906336681755.dkr.ecr.ap-northeast-2.amazonaws.com/petclinic_msa_1:genai-service-v1
+        image: tfcoreacr01.azurecr.io/petclinic-acr:genai-service
         ports:
         - containerPort: 8084
         env:
@@ -514,15 +521,11 @@ spec:
           value: "docker"
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
           value: "http://discovery-server:8761/eureka/"
-        - name: SPRING_AI_OPENAI_API_KEY
+        - name: API_KEY
           valueFrom:
             secretKeyRef:
               name: ai-secret
               key: API_KEY
-        - name: SPRING_AI_OPENAI_BASE_URL        # 추가
-          value: "https://api.groq.com/openai"
-        - name: SPRING_AI_OPENAI_CHAT_OPTIONS_MODEL
-          value: "llama-3.3-70b-versatile"
         readinessProbe:
           httpGet:
             path: /actuator/health
@@ -532,10 +535,10 @@ spec:
         resources:
           requests:
             memory: "512Mi"
-            cpu: "100m"
+            cpu: "250m"
           limits:
             memory: "1Gi"
-            cpu: "300m"
+            cpu: "500m"
 
 ---
 apiVersion: v1
@@ -549,3 +552,26 @@ spec:
   ports:
   - port: 8084
     targetPort: 8084
+
+---
+# ============================================================
+# 10. Ingress (Application Gateway)
+# ============================================================
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: petclinic-ingress
+  namespace: petclinic
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: api-gateway
+            port:
+              number: 80

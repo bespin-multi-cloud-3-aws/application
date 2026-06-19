@@ -1,4 +1,3 @@
-
 # ============================================================
 # 2. config-server (포트 8888)
 # ============================================================
@@ -19,7 +18,7 @@ spec:
     spec:
       containers:
       - name: config-server
-        image: 906336681755.dkr.ecr.ap-northeast-2.amazonaws.com/petclinic_msa_1:config-server
+        image: 906336681755.dkr.ecr.ap-northeast-2.amazonaws.com/petclinic_msa_1:config-server-2
         ports:
         - containerPort: 8888
         env:
@@ -36,10 +35,10 @@ spec:
         resources:
           requests:
             memory: "512Mi"
-            cpu: "50m"
+            cpu: "250m"
           limits:
             memory: "1Gi"
-            cpu: "200m"
+            cpu: "500m"
 
 ---
 apiVersion: v1
@@ -108,10 +107,10 @@ spec:
         resources:
           requests:
             memory: "512Mi"
-            cpu: "50m"
+            cpu: "250m"
           limits:
             memory: "1Gi"
-            cpu: "200m"
+            cpu: "500m"
 
 ---
 apiVersion: v1
@@ -162,16 +161,14 @@ spec:
         - containerPort: 8081
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: "docker"
+          value: "docker,mysql"
         - name: SERVER_PORT
           value: "8081"
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
           value: "http://discovery-server:8761/eureka/"
-        - name: SPRING_JPA_HIBERNATE_DDL_AUTO
-          value: "update"
         envFrom:
-        - secretRef:
-            name: petclinic-db-eso
+        - configMapRef:
+            name: db-config
         readinessProbe:
           httpGet:
             path: /actuator/health
@@ -182,10 +179,10 @@ spec:
         resources:
           requests:
             memory: "512Mi"
-            cpu: "100m"
+            cpu: "250m"
           limits:
             memory: "1Gi"
-            cpu: "300m"
+            cpu: "500m"
 
 ---
 apiVersion: v1
@@ -236,14 +233,12 @@ spec:
         - containerPort: 8083
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: "docker"
+          value: "docker,mysql"
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
           value: "http://discovery-server:8761/eureka/"
-        - name: SPRING_JPA_HIBERNATE_DDL_AUTO
-          value: "update"
         envFrom:
-        - secretRef:
-            name: petclinic-db-eso
+        - configMapRef:
+            name: db-config
         readinessProbe:
           httpGet:
             path: /actuator/health
@@ -253,10 +248,10 @@ spec:
         resources:
           requests:
             memory: "512Mi"
-            cpu: "100m"
+            cpu: "250m"
           limits:
             memory: "1Gi"
-            cpu: "300m"
+            cpu: "500m"
 
 ---
 apiVersion: v1
@@ -307,14 +302,12 @@ spec:
         - containerPort: 8082
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: "docker"
+          value: "docker,mysql"
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
           value: "http://discovery-server:8761/eureka/"
-        - name: SPRING_JPA_HIBERNATE_DDL_AUTO
-          value: "update"
         envFrom:
-        - secretRef:
-            name: petclinic-db-eso
+        - configMapRef:
+            name: db-config
         readinessProbe:
           httpGet:
             path: /actuator/health
@@ -324,10 +317,10 @@ spec:
         resources:
           requests:
             memory: "512Mi"
-            cpu: "100m"
+            cpu: "250m"
           limits:
             memory: "1Gi"
-            cpu: "300m"
+            cpu: "500m"
 
 ---
 apiVersion: v1
@@ -390,10 +383,10 @@ spec:
         resources:
           requests:
             memory: "512Mi"
-            cpu: "100m"
+            cpu: "250m"
           limits:
             memory: "1Gi"
-            cpu: "300m"
+            cpu: "500m"
 
 ---
 apiVersion: v1
@@ -402,11 +395,11 @@ metadata:
   name: api-gateway
   namespace: petclinic
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: api-gateway
   ports:
-  - port: 8080
+  - port: 80
     targetPort: 8080
 
 ---
@@ -457,10 +450,10 @@ spec:
         resources:
           requests:
             memory: "512Mi"
-            cpu: "50m"
+            cpu: "250m"
           limits:
             memory: "1Gi"
-            cpu: "200m"
+            cpu: "500m"
 
 ---
 apiVersion: v1
@@ -519,7 +512,7 @@ spec:
             secretKeyRef:
               name: ai-secret
               key: API_KEY
-        - name: SPRING_AI_OPENAI_BASE_URL        # 추가
+        - name: SPRING_AI_OPENAI_BASE_URL
           value: "https://api.groq.com/openai"
         - name: SPRING_AI_OPENAI_CHAT_OPTIONS_MODEL
           value: "llama-3.3-70b-versatile"
@@ -532,10 +525,10 @@ spec:
         resources:
           requests:
             memory: "512Mi"
-            cpu: "100m"
+            cpu: "250m"
           limits:
             memory: "1Gi"
-            cpu: "300m"
+            cpu: "500m"
 
 ---
 apiVersion: v1
