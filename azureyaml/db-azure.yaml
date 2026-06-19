@@ -15,7 +15,7 @@ metadata:
   name: db-config
   namespace: petclinic
 data:
-  SPRING_DATASOURCE_URL: "jdbc:mysql://10.1.2.4:3306/petclinic?allowPublicKeyRetrieval=true&useSSL=false"
+  SPRING_DATASOURCE_URL: "jdbc:mysql://tfcoretest1devmysql.mysql.database.azure.com:3306/petclinic?allowPublicKeyRetrieval=true&useSSL=false"
   SPRING_DATASOURCE_USERNAME: "petclinicadmin"
 ---
 # ============================================================
