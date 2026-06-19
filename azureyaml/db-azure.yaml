@@ -16,7 +16,7 @@ metadata:
   namespace: petclinic
 data:
   SPRING_DATASOURCE_URL: "jdbc:mysql://10.1.2.4:3306/petclinic?allowPublicKeyRetrieval=true&useSSL=false"
-  SPRING_DATASOURCE_USERNAME: "pet_admin"
+  SPRING_DATASOURCE_USERNAME: "petclinicadmin"
 ---
 # ============================================================
 # 3. DB Secret
