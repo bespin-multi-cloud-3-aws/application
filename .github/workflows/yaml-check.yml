@@ -1,4 +1,4 @@
-name: YAML Validate CI
+name: YAML Validate & Format CI
 
 on:
   push:
@@ -14,13 +14,27 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
+      # ============================================================
+      # 1. YAML Format (fmt) 스타일 검사
+      # ============================================================
+      - name: Install and Run yamllint (Format Check)
+        run: |
+          sudo apt-get update && sudo apt-get install -y yamllint
+          
+          echo "=== YAML Format (fmt) 스타일 검사 시작 ==="
+          
+          # .github 폴더는 무시하고, 나머지 경로의 들여쓰기 및 포맷 스타일 검사
+          # d: "{extends: relaxed, rules: {line-length: disable}}" 옵션으로 너무 깐깐한 한 줄 길이 제한만 느슨하게 풀어줍니다.
+          find . -path "./.github" -prune -o \( -name "*.yaml" -o -name "*.yml" \) -exec yamllint -d "{extends: relaxed, rules: {line-length: disable}}" {} +
+
+      # ============================================================
+      # 2. Kubernetes 스키마 문법 검사 
+      # ============================================================
       - name: Install and Run Kubeconform
         run: |
           curl -L -o kubeconform.tar.gz https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz
           tar -xzf kubeconform.tar.gz
           sudo mv kubeconform /usr/local/bin/
           
-          echo "=== .github 폴더를 제외한 순수 YAML 파일만 골라서 검사 시작 ==="
-          
-          # xargs 대신 -exec ... + 구문을 사용하여 안전하게 파일 목록을 kubeconform의 인자로 전달합니다.
+          echo "=== Kubeconform 구조 및 스키마 검사 시작 ==="
           find . -path "./.github" -prune -o \( -name "*.yaml" -o -name "*.yml" \) -exec kubeconform -summary -ignore-missing-schemas {} +
