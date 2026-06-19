@@ -179,6 +179,8 @@ spec:
         envFrom:
         - configMapRef:
             name: db-config
+        - secretRef:
+            name: db-secret
         readinessProbe:
           httpGet:
             path: /actuator/health
@@ -251,6 +253,8 @@ spec:
         envFrom:
         - configMapRef:
             name: db-config
+        - secretRef:
+            name: db-secret
         readinessProbe:
           httpGet:
             path: /actuator/health
@@ -322,6 +326,8 @@ spec:
         envFrom:
         - configMapRef:
             name: db-config
+        - secretRef:
+            name: db-secret
         readinessProbe:
           httpGet:
             path: /actuator/health
