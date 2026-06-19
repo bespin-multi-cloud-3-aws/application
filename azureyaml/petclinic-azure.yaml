@@ -211,143 +211,143 @@ spec:
 # ============================================================
 # 5. vets-service (포트 8083)
 # ============================================================
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: vets-service
-#   namespace: petclinic
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: vets-service
-#   template:
-#     metadata:
-#       labels:
-#         app: vets-service
-#     spec:
-#       initContainers:
-#       - name: wait-for-discovery
-#         image: curlimages/curl:latest
-#         command:
-#         - sh
-#         - -c
-#         - |
-#           until curl -sf http://discovery-server:8761/actuator/health; do
-#             echo "Waiting for discovery-server..."; sleep 5;
-#           done
-#       containers:
-#       - name: vets-service
-#         image: tfcoreacr01.azurecr.io/petclinic-acr:vets-service
-#         ports:
-#         - containerPort: 8083
-#         env:
-#         - name: SPRING_PROFILES_ACTIVE
-#           value: "docker,mysql"
-#         - name: SPRING_CLOUD_CONFIG_SERVER_GIT_DEFAULT_LABEL
-#           value: "azure"
-#         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-#           value: "http://discovery-server:8761/eureka/"
-#         envFrom:
-#         - configMapRef:
-#             name: db-config
-#         readinessProbe:
-#           httpGet:
-#             path: /actuator/health
-#             port: 8083
-#           initialDelaySeconds: 30
-#           periodSeconds: 10
-#         resources:
-#           requests:
-#             memory: "512Mi"
-#             cpu: "250m"
-#           limits:
-#             memory: "1Gi"
-#             cpu: "500m"
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vets-service
+  namespace: petclinic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vets-service
+  template:
+    metadata:
+      labels:
+        app: vets-service
+    spec:
+      initContainers:
+      - name: wait-for-discovery
+        image: curlimages/curl:latest
+        command:
+        - sh
+        - -c
+        - |
+          until curl -sf http://discovery-server:8761/actuator/health; do
+            echo "Waiting for discovery-server..."; sleep 5;
+          done
+      containers:
+      - name: vets-service
+        image: tfcoreacr01.azurecr.io/petclinic-acr:vets-service
+        ports:
+        - containerPort: 8083
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "docker,mysql"
+        - name: SPRING_CLOUD_CONFIG_SERVER_GIT_DEFAULT_LABEL
+          value: "azure"
+        - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+          value: "http://discovery-server:8761/eureka/"
+        envFrom:
+        - configMapRef:
+            name: db-config
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8083
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
 
 ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: vets-service
-#   namespace: petclinic
-# spec:
-#   selector:
-#     app: vets-service
-#   ports:
-#   - port: 8083
-#     targetPort: 8083
+apiVersion: v1
+kind: Service
+metadata:
+  name: vets-service
+  namespace: petclinic
+spec:
+  selector:
+    app: vets-service
+  ports:
+  - port: 8083
+    targetPort: 8083
 
 ---
 # ============================================================
 # 6. visits-service (포트 8082)
 # ============================================================
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: visits-service
-#   namespace: petclinic
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: visits-service
-#   template:
-#     metadata:
-#       labels:
-#         app: visits-service
-#     spec:
-#       initContainers:
-#       - name: wait-for-discovery
-#         image: curlimages/curl:latest
-#         command:
-#         - sh
-#         - -c
-#         - |
-#           until curl -sf http://discovery-server:8761/actuator/health; do
-#             echo "Waiting for discovery-server..."; sleep 5;
-#           done
-#       containers:
-#       - name: visits-service
-#         image: tfcoreacr01.azurecr.io/petclinic-acr:visits-service
-#         ports:
-#         - containerPort: 8082
-#         env:
-#         - name: SPRING_PROFILES_ACTIVE
-#           value: "docker,mysql"
-#         - name: SPRING_CLOUD_CONFIG_SERVER_GIT_DEFAULT_LABEL
-#           value: "azure"
-#         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-#           value: "http://discovery-server:8761/eureka/"
-#         envFrom:
-#         - configMapRef:
-#             name: db-config
-#         readinessProbe:
-#           httpGet:
-#             path: /actuator/health
-#             port: 8082
-#           initialDelaySeconds: 30
-#           periodSeconds: 10
-#         resources:
-#           requests:
-#             memory: "512Mi"
-#             cpu: "250m"
-#           limits:
-#             memory: "1Gi"
-#             cpu: "500m"
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visits-service
+  namespace: petclinic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: visits-service
+  template:
+    metadata:
+      labels:
+        app: visits-service
+    spec:
+      initContainers:
+      - name: wait-for-discovery
+        image: curlimages/curl:latest
+        command:
+        - sh
+        - -c
+        - |
+          until curl -sf http://discovery-server:8761/actuator/health; do
+            echo "Waiting for discovery-server..."; sleep 5;
+          done
+      containers:
+      - name: visits-service
+        image: tfcoreacr01.azurecr.io/petclinic-acr:visits-service
+        ports:
+        - containerPort: 8082
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "docker,mysql"
+        - name: SPRING_CLOUD_CONFIG_SERVER_GIT_DEFAULT_LABEL
+          value: "azure"
+        - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+          value: "http://discovery-server:8761/eureka/"
+        envFrom:
+        - configMapRef:
+            name: db-config
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8082
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
 
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: visits-service
-#   namespace: petclinic
-# spec:
-#   selector:
-#     app: visits-service
-#   ports:
-#   - port: 8082
-#     targetPort: 8082
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: visits-service
+  namespace: petclinic
+spec:
+  selector:
+    app: visits-service
+  ports:
+  - port: 8082
+    targetPort: 8082
 
 ---
 # ============================================================
