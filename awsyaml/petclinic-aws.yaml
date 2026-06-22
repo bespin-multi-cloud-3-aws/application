@@ -386,8 +386,8 @@ spec:
             path: /actuator/health
             port: 8080
           initialDelaySeconds: 90
-          periodSeconds: 30
-          failureThreshold: 10
+          periodSeconds: 10
+          failureThreshold: 3
         resources:
           requests:
             memory: "512Mi"
