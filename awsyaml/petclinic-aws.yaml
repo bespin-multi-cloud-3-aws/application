@@ -403,12 +403,13 @@ metadata:
   name: api-gateway
   namespace: petclinic
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: api-gateway
   ports:
   - port: 8080
     targetPort: 8080
+    nodePort: 30080
 
 ---
 # ============================================================
