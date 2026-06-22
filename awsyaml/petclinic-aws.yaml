@@ -379,6 +379,10 @@ spec:
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "docker"
+        - name: SPRING_ZIPKIN_ENABLED
+          value: "false"
+        - name: MANAGEMENT_TRACING_ENABLED
+          value: "false"
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
           value: "http://discovery-server:8761/eureka/"
         readinessProbe:
