@@ -379,10 +379,12 @@ spec:
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "docker"
-        - name: SPRING_ZIPKIN_ENABLED
-          value: "false"
         - name: MANAGEMENT_TRACING_ENABLED
-          value: "false"
+          value: "true"
+        - name: SPRING_ZIPKIN_ENABLED
+          value: "true"
+        - name: MANAGEMENT_ZIPKIN_TRACING_ENDPOINT
+          value: "http://localhost:4316/v2/spans"
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
           value: "http://discovery-server:8761/eureka/"
         readinessProbe:
