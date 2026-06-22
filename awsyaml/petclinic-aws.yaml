@@ -169,14 +169,6 @@ spec:
           value: "http://discovery-server:8761/eureka/"
         - name: SPRING_JPA_HIBERNATE_DDL_AUTO
           value: "update"
-        - name: WHATAP_LICENSE
-          value: "x6063to8edart-z1thjg1l9pk1eb-x6chd41ba1t56r"
-        - name: WHATAP_HOST
-          value: "13.124.11.223"
-        - name: WHATAP_PROJECT_CODE
-          value: "50158"
-        - name: JAVA_TOOL_OPTIONS
-          value: "-javaagent:/whatap/whatap.agent.jar"
         envFrom:
         - secretRef:
             name: petclinic-db-eso
