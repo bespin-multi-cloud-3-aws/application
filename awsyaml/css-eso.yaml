@@ -72,13 +72,3 @@ spec:
         key: ai-secret
         property: API_KEY
 
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: whatap-config
-  namespace: whatap-monitoring
-data:
-  whatap.license: "x6063to8edart-z1thjg1l9pk1eb-x6chd41ba1t56r"
-  whatap.host: "13.124.11.223" # 와탭 수집 서버 IP
-  whatap.project.code: "50158" # 프로젝트 코드
