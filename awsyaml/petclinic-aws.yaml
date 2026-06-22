@@ -379,19 +379,13 @@ spec:
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "docker"
-        - name: MANAGEMENT_TRACING_ENABLED
-          value: "true"
-        - name: SPRING_ZIPKIN_ENABLED
-          value: "true"
-        - name: MANAGEMENT_ZIPKIN_TRACING_ENDPOINT
-          value: "http://localhost:4316/v2/spans"
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
           value: "http://discovery-server:8761/eureka/"
         readinessProbe:
           httpGet:
             path: /actuator/health
             port: 8080
-          initialDelaySeconds: 60
+          initialDelaySeconds: 90
           periodSeconds: 30
           failureThreshold: 10
         resources:
