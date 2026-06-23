@@ -91,6 +91,8 @@ spec:
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "docker"
+        - name: CONFIG_SERVER_URL
+          value: "http://config-server:8888"
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
           value: "http://discovery-server:8761/eureka/"
         - name: EUREKA_CLIENT_REGISTER_WITH_EUREKA
@@ -378,6 +380,8 @@ spec:
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "docker"
+        - name: CONFIG_SERVER_URL
+          value: "http://config-server:8888"
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
           value: "http://discovery-server:8761/eureka/"
         readinessProbe:
