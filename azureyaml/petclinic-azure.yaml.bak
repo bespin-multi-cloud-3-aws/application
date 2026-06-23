@@ -26,6 +26,8 @@ spec:
           value: "docker"
         - name: SPRING_CLOUD_CONFIG_SERVER_GIT_URI
           value: "https://github.com/bespin-multi-cloud-3-aws/spring-petclinic-microservices-config"
+        - name: SPRING_CLOUD_CONFIG_SERVER_GIT_CLONE_ON_START
+          value: "true"
         - name: SPRING_CLOUD_CONFIG_SERVER_GIT_DEFAULT_LABEL
           value: "main"
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
@@ -168,25 +170,17 @@ spec:
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "docker"
-        - name: SPRING_CLOUD_CONFIG_URI
-          value: "http://config-server:8888"
+        - name: SPRING_CLOUD_CONFIG_SERVER_GIT_DEFAULT_LABEL
+          value: "main"
         - name: SERVER_PORT
           value: "8081"
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
           value: "http://discovery-server:8761/eureka/"
-        - name: SPRING_SQL_INIT_MODE
-          value: "always"
-        - name: SPRING_SQL_INIT_SCHEMA_LOCATIONS
-          value: "classpath*:db/mysql/schema.sql"
-        - name: SPRING_SQL_INIT_DATA_LOCATIONS
-          value: ""
         envFrom:
         - configMapRef:
             name: db-config
         - secretRef:
             name: db-secret
-        - secretRef:
-            name: ai-secret
         readinessProbe:
           httpGet:
             path: /actuator/health
@@ -252,23 +246,15 @@ spec:
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "docker"
-        - name: SPRING_CLOUD_CONFIG_URI
-          value: "http://config-server:8888"
+        - name: SPRING_CLOUD_CONFIG_SERVER_GIT_DEFAULT_LABEL
+          value: "main"
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
           value: "http://discovery-server:8761/eureka/"
-        - name: SPRING_SQL_INIT_MODE
-          value: "always"
-        - name: SPRING_SQL_INIT_SCHEMA_LOCATIONS
-          value: "classpath*:db/mysql/schema.sql"
-        - name: SPRING_SQL_INIT_DATA_LOCATIONS
-          value: ""
         envFrom:
         - configMapRef:
             name: db-config
         - secretRef:
             name: db-secret
-        - secretRef:
-            name: ai-secret
         readinessProbe:
           httpGet:
             path: /actuator/health
@@ -333,23 +319,15 @@ spec:
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "docker"
-        - name: SPRING_CLOUD_CONFIG_URI
-          value: "http://config-server:8888"
+        - name: SPRING_CLOUD_CONFIG_SERVER_GIT_DEFAULT_LABEL
+          value: "main"
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
           value: "http://discovery-server:8761/eureka/"
-        - name: SPRING_SQL_INIT_MODE
-          value: "always"
-        - name: SPRING_SQL_INIT_SCHEMA_LOCATIONS
-          value: "classpath*:db/mysql/schema.sql"
-        - name: SPRING_SQL_INIT_DATA_LOCATIONS
-          value: ""
         envFrom:
         - configMapRef:
             name: db-config
         - secretRef:
             name: db-secret
-        - secretRef:
-            name: ai-secret
         readinessProbe:
           httpGet:
             path: /actuator/health
