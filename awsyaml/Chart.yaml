@@ -1,4 +1,0 @@
-apiVersion: v2
-name: petclinic-chart
-description: A Helm chart for Spring Petclinic
-version: 0.1.0
