@@ -128,7 +128,7 @@ spec:
 
 ---
 # ============================================================
-# 4. customers-service (포트 8081)
+# 4. customers-service (포트 8081) - WhaTap 수동 주입 버전
 # ============================================================
 apiVersion: apps/v1
 kind: Deployment
@@ -155,6 +155,13 @@ spec:
           until curl -sf http://discovery-server:8761/actuator/health; do
             echo "Waiting for discovery-server..."; sleep 5;
           done
+      # [와탭 추가] 에이전트 파일 복사용 InitContainer
+      - name: whatap-agent-init
+        image: whatap/kube_mon:latest
+        command: ["cp", "/usr/whatap/whatap.agent.jar", "/whatap/"]
+        volumeMounts:
+        - name: whatap-agent-vol
+          mountPath: /whatap
       containers:
       - name: customers-service
         image: 906336681755.dkr.ecr.ap-northeast-2.amazonaws.com/petclinic_msa_1:customers-service
@@ -169,6 +176,18 @@ spec:
           value: "http://discovery-server:8761/eureka/"
         - name: SPRING_JPA_HIBERNATE_DDL_AUTO
           value: "update"
+        # [와탭 추가] 에이전트 설정 환경변수
+        - name: WHATAP_LICENSE
+          value: "x6063to8edart-z1thjg1l9pk1eb-x6chd41ba1t56r"
+        - name: WHATAP_HOST
+          value: "13.124.11.223/13.209.172.35"
+        - name: WHATAP_PROJECT_CODE
+          value: "50158"
+        - name: JAVA_TOOL_OPTIONS
+          value: "-javaagent:/whatap/whatap.agent.jar"
+        volumeMounts:
+        - name: whatap-agent-vol
+          mountPath: /whatap
         envFrom:
         - secretRef:
             name: petclinic-db-eso
@@ -186,6 +205,10 @@ spec:
           limits:
             memory: "1Gi"
             cpu: "300m"
+      # [와탭 추가] 볼륨 정의
+      volumes:
+      - name: whatap-agent-vol
+        emptyDir: {}
 
 ---
 apiVersion: v1
@@ -199,7 +222,6 @@ spec:
   ports:
   - port: 8081
     targetPort: 8081
-
 ---
 # ============================================================
 # 5. vets-service (포트 8083)
