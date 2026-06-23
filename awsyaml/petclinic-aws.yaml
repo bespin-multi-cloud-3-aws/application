@@ -155,13 +155,6 @@ spec:
           until curl -sf http://discovery-server:8761/actuator/health; do
             echo "Waiting for discovery-server..."; sleep 5;
           done
-      # [와탭 추가] 에이전트 파일 복사용 InitContainer
-      - name: whatap-agent-init
-        image: whatap/kube_mon:latest
-        command: ["cp", "/usr/whatap/whatap.agent.jar", "/whatap/"]
-        volumeMounts:
-        - name: whatap-agent-vol
-          mountPath: /whatap
       containers:
       - name: customers-service
         image: 906336681755.dkr.ecr.ap-northeast-2.amazonaws.com/petclinic_msa_1:customers-service
