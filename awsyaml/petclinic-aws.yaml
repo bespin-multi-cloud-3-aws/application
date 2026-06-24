@@ -36,10 +36,10 @@ spec:
         resources:
           requests:
             memory: "512Mi"
-            cpu: "50m"
+            cpu: "100m"
           limits:
             memory: "1Gi"
-            cpu: "200m"
+            cpu: "400m"
 
 ---
 apiVersion: v1
@@ -110,10 +110,10 @@ spec:
         resources:
           requests:
             memory: "512Mi"
-            cpu: "50m"
+            cpu: "100m"
           limits:
             memory: "1Gi"
-            cpu: "200m"
+            cpu: "400m"
 
 ---
 apiVersion: v1
@@ -362,16 +362,6 @@ spec:
       labels:
         app: api-gateway
     spec:
-      initContainers:
-      - name: wait-for-discovery
-        image: curlimages/curl:latest
-        command:
-        - sh
-        - -c
-        - |
-          until curl -sf http://discovery-server:8761/actuator/health; do
-            echo "Waiting for discovery-server..."; sleep 5;
-          done
       containers:
       - name: api-gateway
         image: 906336681755.dkr.ecr.ap-northeast-2.amazonaws.com/petclinic_msa_1:api-gateway
