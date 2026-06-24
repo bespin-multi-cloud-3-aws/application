@@ -388,16 +388,15 @@ spec:
           httpGet:
             path: /actuator/health
             port: 8080
-          initialDelaySeconds: 90
+          initialDelaySeconds: 30
           periodSeconds: 10
-          failureThreshold: 3
         resources:
           requests:
             memory: "512Mi"
-            cpu: "100m"
+            cpu: "300m"
           limits:
             memory: "1Gi"
-            cpu: "300m"
+            cpu: "800m"
 
 ---
 apiVersion: v1
