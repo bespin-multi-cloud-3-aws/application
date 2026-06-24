@@ -353,7 +353,6 @@ metadata:
   name: api-gateway
   namespace: petclinic
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: api-gateway
