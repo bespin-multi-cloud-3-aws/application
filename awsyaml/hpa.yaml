@@ -31,14 +31,14 @@ spec:
     kind: Deployment
     name: customers-service
   minReplicas: 2
-  maxReplicas: 5
+  maxReplicas: 6
   metrics:
   - type: Resource
     resource:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 70
+        averageUtilization: 60
 
 ---
 # vets-service HPA
@@ -53,14 +53,14 @@ spec:
     kind: Deployment
     name: vets-service
   minReplicas: 2
-  maxReplicas: 5
+  maxReplicas: 6
   metrics:
   - type: Resource
     resource:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 70
+        averageUtilization: 60
 
 ---
 # visits-service HPA
@@ -97,11 +97,11 @@ spec:
     kind: Deployment
     name: api-gateway
   minReplicas: 3
-  maxReplicas: 5
+  maxReplicas: 6
   metrics:
   - type: Resource
     resource:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 70
+        averageUtilization: 60
