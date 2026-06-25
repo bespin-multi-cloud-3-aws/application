@@ -191,7 +191,7 @@ spec:
           httpGet:
             path: /actuator/health
             port: 8081
-          initialDelaySeconds: 30
+          initialDelaySeconds: 45
           periodSeconds: 10
           failureThreshold: 10
         resources:
@@ -273,7 +273,7 @@ spec:
           httpGet:
             path: /actuator/health
             port: 8083
-          initialDelaySeconds: 30
+          initialDelaySeconds: 45
           periodSeconds: 10
         resources:
           requests:
@@ -354,7 +354,7 @@ spec:
           httpGet:
             path: /actuator/health
             port: 8082
-          initialDelaySeconds: 30
+          initialDelaySeconds: 45
           periodSeconds: 10
         resources:
           requests:
@@ -420,7 +420,7 @@ spec:
           httpGet:
             path: /actuator/health
             port: 8080
-          initialDelaySeconds: 30
+          initialDelaySeconds: 45
           periodSeconds: 10
         resources:
           requests:
