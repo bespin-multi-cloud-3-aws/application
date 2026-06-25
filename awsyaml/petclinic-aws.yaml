@@ -148,6 +148,18 @@ spec:
       labels:
         app: customers-service
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - customers-service
+              topologyKey: kubernetes.io/hostname
       initContainers:
       - name: wait-for-discovery
         image: curlimages/curl:latest
@@ -222,6 +234,18 @@ spec:
       labels:
         app: vets-service
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - vets-service
+              topologyKey: kubernetes.io/hostname
       initContainers:
       - name: wait-for-discovery
         image: curlimages/curl:latest
@@ -294,6 +318,18 @@ spec:
       labels:
         app: visits-service
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - visits-service
+              topologyKey: kubernetes.io/hostname
       initContainers:
       - name: wait-for-discovery
         image: curlimages/curl:latest
@@ -366,6 +402,18 @@ spec:
       labels:
         app: api-gateway
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - api-gateway
+              topologyKey: kubernetes.io/hostname
       containers:
       - name: api-gateway
         image: 906336681755.dkr.ecr.ap-northeast-2.amazonaws.com/petclinic_msa_1:api-gateway
