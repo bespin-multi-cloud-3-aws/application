@@ -414,6 +414,16 @@ spec:
                   values:
                   - api-gateway
               topologyKey: kubernetes.io/hostname
+      initContainers:
+      - name: wait-for-config
+        image: curlimages/curl:latest
+        command:
+        - sh
+        - -c
+        - |
+          until curl -sf http://config-server:8888/actuator/health; do
+            echo "Waiting for config-server..."; sleep 5;
+          done
       containers:
       - name: api-gateway
         image: 906336681755.dkr.ecr.ap-northeast-2.amazonaws.com/petclinic_msa_1:api-gateway
